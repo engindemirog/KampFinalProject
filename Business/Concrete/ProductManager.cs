@@ -30,7 +30,8 @@ namespace Business.Concrete
         }
 
         //22.15 DERSTEYİZ
-
+        //Claim
+        //[SecuredOperation("product.add")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {

@@ -10,3 +10,5 @@ namespace Core.Utilities.Security.JWT
         AccessToken CreateToken(User user, List<OperationClaim> operationClaims);
     }
 }
+
+//23.05 Dersteyiz

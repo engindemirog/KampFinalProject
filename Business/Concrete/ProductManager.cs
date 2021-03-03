@@ -51,12 +51,10 @@ namespace Business.Concrete
 
             return new SuccessResult(Messages.ProductAdded);
 
-
-           
-            //23:10 Dersteyiz
         }
 
 
+        [CacheAspect] //key,value
         public IDataResult<List<Product>> GetAll()
         {
             if (DateTime.Now.Hour == 1)

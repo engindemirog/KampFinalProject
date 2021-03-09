@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.InMemory
 {
@@ -23,12 +24,12 @@ namespace DataAccess.Concrete.InMemory
                 new Product{ProductId=5, CategoryId=2, ProductName="Fare", UnitPrice=85, UnitsInStock=1}
             };
         }
-        public void Add(Product product)
+        public async Task AddAsync(Product product)
         {
-            _products.Add(product);
+             _products.Add(product);
         }
 
-        public void Delete(Product product)
+        public async Task DeleteAsync(Product product)
         {
             //LINQ - Language Integrated Query
             //Lambda
@@ -42,7 +43,7 @@ namespace DataAccess.Concrete.InMemory
             return _products;
         }
 
-        public void Update(Product product)
+        public async Task UpdateAsync(Product product)
         {
             //Gönderdiğim ürün id'sine sahip olan listedeki ürünü bul
             Product productToUpdate = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
@@ -57,19 +58,26 @@ namespace DataAccess.Concrete.InMemory
            return _products.Where(p => p.CategoryId == categoryId).ToList();
         }
 
-        public List<Product> GetAll(Expression<Func<Product, bool>> filter = null)
+       
+
+        Task<List<ProductDetailDto>> IProductDal.GetProductDetailsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Product Get(Expression<Func<Product, bool>> filter)
+        public Task<List<Product>> GetAllAsync(Expression<Func<Product, bool>> filter = null)
         {
             throw new NotImplementedException();
         }
 
-        public List<ProductDetailDto> GetProductDetails()
+        public Task<Product> GetAsync(Expression<Func<Product, bool>> filter)
         {
             throw new NotImplementedException();
         }
+
+     
+      
+
+       
     }
 }

@@ -26,11 +26,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             //Swagger
             //Dependency chain --
-            var result =  _productService.GetAll();
+            
+            var result = await _productService.GetAllAsync();
             if (result.Success)
             {
                 return Ok(result);
@@ -40,9 +41,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _productService.GetById(id);
+            var result =await _productService.GetByIdAsync(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -52,9 +53,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(Product product)
+        public async Task<IActionResult> Add(Product product)
         {
-            var result = _productService.Add(product);
+            var result =await _productService.AddAsync(product);
             if (result.Success)
             {
                 return Ok(result);

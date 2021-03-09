@@ -1,5 +1,6 @@
 ﻿using Castle.DynamicProxy;
 using System;
+using System.Threading.Tasks;
 
 namespace Core.Utilities.Interceptors
 {
@@ -10,13 +11,25 @@ namespace Core.Utilities.Interceptors
         protected virtual void OnAfter(IInvocation invocation) { }
         protected virtual void OnException(IInvocation invocation, System.Exception e) { }
         protected virtual void OnSuccess(IInvocation invocation) { }
-        public override void Intercept(IInvocation invocation)
+
+        public override void InterceptAsynchronous<TResult>(IInvocation invocation)
         {
+            invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
+        }
+
+
+        private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+        {
+
+
+            TResult result;
             var isSuccess = true;
             OnBefore(invocation);
             try
             {
                 invocation.Proceed();
+                var task = (Task<TResult>)invocation.ReturnValue;
+                result = await task;
             }
             catch (Exception e)
             {
@@ -32,6 +45,8 @@ namespace Core.Utilities.Interceptors
                 }
             }
             OnAfter(invocation);
+            return result;
+
         }
     }
 

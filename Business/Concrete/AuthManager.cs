@@ -4,6 +4,7 @@ using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
 using Entities.DTOs;
+using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
@@ -18,7 +19,7 @@ namespace Business.Concrete
             _tokenHelper = tokenHelper;
         }
 
-        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
+        public async Task<IDataResult<User>> RegisterAsync(UserForRegisterDto userForRegisterDto, string password)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -31,13 +32,13 @@ namespace Business.Concrete
                 PasswordSalt = passwordSalt,
                 Status = true
             };
-            _userService.Add(user);
+            await _userService.AddAsync(user);
             return new SuccessDataResult<User>(user, "Kayıt oldu");
         }
 
-        public IDataResult<User> Login(UserForLoginDto userForLoginDto)
+        public async Task<IDataResult<User>> LoginAsync(UserForLoginDto userForLoginDto)
         {
-            var userToCheck = _userService.GetByMail(userForLoginDto.Email);
+            var userToCheck = await _userService.GetByMailAsync(userForLoginDto.Email);
             if (userToCheck == null)
             {
                 return new ErrorDataResult<User>("Kullanıcı bulunamadı");
@@ -51,18 +52,18 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(userToCheck, "Başarılı giriş");
         }
 
-        public IResult UserExists(string email)
+        public async Task<IResult> UserExistsAsync(string email)
         {
-            if (_userService.GetByMail(email) != null)
+            if (await _userService.GetByMailAsync(email) != null)
             {
                 return new ErrorResult("Kullanıcı mevcut");
             }
             return new SuccessResult();
         }
 
-        public IDataResult<AccessToken> CreateAccessToken(User user)
+        public async Task<IDataResult<AccessToken>> CreateAccessTokenAsync(User user)
         {
-            var claims = _userService.GetClaims(user);
+            var claims =await _userService.GetClaimsAsync(user);
             var accessToken = _tokenHelper.CreateToken(user, claims);
             return new SuccessDataResult<AccessToken>(accessToken, "Token oluşturuldu");
         }

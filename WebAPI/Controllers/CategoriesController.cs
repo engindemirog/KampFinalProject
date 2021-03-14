@@ -9,11 +9,11 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : Controller
+    public class CategoriesController : Controller
     {
         private ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
@@ -23,9 +23,9 @@ namespace WebAPI.Controllers
             return View();
         }
         [HttpGet("getall")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var result = _categoryService.GetAll();
+            var result =await _categoryService.GetAllAsync();
             if (result.Success)
             {
                 return Ok(result);
